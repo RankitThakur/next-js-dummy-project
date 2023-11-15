@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { sign } from "jsonwebtoken";
 import pool from "../../../../utils/db";
-import uid from "uid";
 
 const client = await pool.connect();
 
