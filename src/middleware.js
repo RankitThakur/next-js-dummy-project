@@ -1,27 +1,37 @@
 import { NextResponse } from "next/server";
+import Cookies from "js-cookie";
 
 export const middleware = async (request) => {
-  const pathname = await request.url;
-  console.log(pathname);
-  if (pathname && pathname.startsWith("/Dashboard/")) {
-    const hasAccessToken = checkAccessToken();
+  const pathname = new URL(request.url).pathname;
+  const protectedPaths = ["/", "/Home", "/Dashboard", "/Products"];
+
+  if (protectedPaths.includes(pathname)) {
+    const hasAccessToken = checkAccessToken(request);
+
     if (hasAccessToken) {
       return NextResponse.next();
     }
-    return NextResponse.redirect(new URL("/login", request.url));
+
+    const loginUrl = new URL("/Login", request.url).toString();
+    return NextResponse.redirect(loginUrl);
   }
+
   return NextResponse.next();
 };
 
 export const config = {
-  matcher: ["/Dashboard/:path*"],
+  matcher: ["/:path", "/Dashboard:path", "/Home:path", "/Products:path"],
 };
 
-const checkAccessToken = () => {
-  const accessToken = getAccessTokenFromSomewhere();
+const checkAccessToken = (request) => {
+  const accessToken = getAccessTokenFromLocalStorage(request);
   return Boolean(accessToken);
 };
 
-const getAccessTokenFromSomewhere = () => {
-  return localStorage.get("access-token");
+const getAccessTokenFromLocalStorage = () => {
+  // Log the 'accessToken' value for debugging
+  // console.log("Access Token:", localStorage.getItem("accessToken"));
+
+  // Return the value or handle accordingly
+  return true;
 };

@@ -2,9 +2,9 @@
 import { Mulish } from "next/font/google";
 import { Box, Button } from "@mui/material";
 import { Modal } from "../../components/Modal/Modal";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { ProductForm } from "../../components/ProductForm/ProductForm";
-import ProductList from "../../components/ProductList/ProductList";
+import ProductItems from "../../components/ProductItems/ProductItems";
 const mulish = Mulish({
   weight: ["300", "400", "500", "600", "700", "800", "900"],
   subsets: ["latin"],
@@ -15,9 +15,6 @@ const HomePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [reloadProductList, setReloadProductList] = useState(false);
 
-  const handleReloadProductList = () => {
-    setReloadProductList(!reloadProductList);
-  };
   return (
     <>
       <Box sx={{ marginTop: 4 }}>
@@ -39,7 +36,7 @@ const HomePage = () => {
             />
           }
         />
-        <ProductList key={reloadProductList} />
+        <ProductItems getData={reloadProductList} />
       </Box>
     </>
   );

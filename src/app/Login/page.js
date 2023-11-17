@@ -5,6 +5,7 @@ import { TextField, Button, Box, Grid, Typography, Paper } from "@mui/material";
 import { LoginValidationSchema } from "./login.schema";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 const Login = () => {
   const router = useRouter();
@@ -24,12 +25,11 @@ const Login = () => {
         });
         const data = await response.json();
         if (data.result) {
-          router.push("/Dashboard");
+          router.push("/");
         }
-        localStorage.setItem("access-token", data.accessToken);
+        Cookies.set("accessToken", data.accessToken);
       },
     });
-
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} md={7}></Grid>

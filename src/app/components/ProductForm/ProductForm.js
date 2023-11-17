@@ -1,14 +1,19 @@
 import React from "react";
-import { Button, Box, Grid, TextField } from "@mui/material";
-import { AddProduct } from "../../config/axios/axiosApi";
+import { Button, Box, Grid, TextField, Typography } from "@mui/material";
+import { addProduct, updateProduct } from "../../config/axios/axiosApi";
 
-export const ProductForm = ({ onClose, reloadProductList }) => {
-  const [productName, setProductName] = React.useState("");
-  const [productDetails, setProductDetails] = React.useState("");
+export const ProductForm = ({ onClose, reloadProductList, isEdit, value }) => {
+  const [productName, setProductName] = React.useState(
+    isEdit ? value.name : ""
+  );
+  const [productDetails, setProductDetails] = React.useState(
+    isEdit ? value.product_detail : ""
+  );
 
+  console.log(value);
   const handleSubmit = async () => {
     try {
-      const res = await AddProduct({ productName, productDetails });
+      const res = await addProduct({ productName, productDetails });
       if (res) {
         onClose();
         setProductName("");
@@ -20,8 +25,19 @@ export const ProductForm = ({ onClose, reloadProductList }) => {
     }
   };
 
+  const handleUpdate = async () => {
+    const data = { productName, productDetails };
+    const id = value.id;
+    const res = await updateProduct(id, data);
+    if (res) {
+      onClose();
+      reloadProductList();
+    }
+  };
+
   return (
     <>
+      <Typography> {isEdit ? "Edit" : "ADD"}</Typography>
       <Grid container spacing={2} sx={{ marginTop: "2px" }}>
         <Grid item xs={12}>
           <TextField
@@ -51,9 +67,9 @@ export const ProductForm = ({ onClose, reloadProductList }) => {
               color="primary"
               size="medium"
               sx={{ marginRight: "20px" }}
-              onClick={handleSubmit}
+              onClick={isEdit ? handleUpdate : handleSubmit}
             >
-              Add Product
+              {isEdit ? "Edit Product" : "Add Product"}
             </Button>
             <Button
               type="button"
